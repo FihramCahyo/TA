@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChartController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KeuanganController;
@@ -8,23 +9,23 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VotingController;
-use Illuminate\Support\Facades\Route;
 
+// Guest routes
 Route::get('/', function () {
     return view('auth.login');
 });
 
-Route::middleware('auth')->group(function () {
+// Authenticated routes
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Role
-Route::middleware(['auth', 'verified'])->group(function () {
-})->middleware('role:SDM')->name('dashboard');
+// Routes for SDM role
+Route::middleware(['auth', 'verified', 'role:SDM'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
-Route::group(['middleware' => 'role:SDM'], function () {
     Route::get('/voting-detail', [VotingController::class, 'detail'])->name('voting.detail');
     Route::get('/voting-user-detail/{id}', [VotingController::class, 'userdetail'])->name('voting.user-detail');
 
@@ -32,12 +33,10 @@ Route::group(['middleware' => 'role:SDM'], function () {
     Route::get('/makanan-user-detail/{id}', [MakananController::class, 'userdetail'])->name('makanan.user-detail');
 
     Route::get('/bar-chart', 'ChartController@barChart');
-    Route::get('/get-menu/{restaurantName}', 'MakananController@getMenuByRestaurant');
 
-    Route::get('/keuangan', [KeuanganController::class, 'index'])->name('keuangan.index');
-    Route::get('/keuangan-detail', [KeuanganController::class, 'detail'])->name('keuangan.detail');
+    Route::get('/get-menu/{restaurantName}', [MakananController::class, 'getMenuByRestaurant'])->name('menu.get-menu');
 
-    Route::get('/makanans/{id}', [KeuanganController::class, 'getMakananByKeuangan']);
+    Route::get('keuangan/get-makanan-by-keuangan/{id}', [KeuanganController::class, 'getMakananbyKeuangan']);
 
     Route::resource('keuangan', KeuanganController::class);
     Route::resource('dashboard', DashboardController::class);
@@ -46,14 +45,16 @@ Route::group(['middleware' => 'role:SDM'], function () {
     Route::resource('user', UserController::class);
 });
 
-Route::group(['middleware' => 'role:Karyawan'], function () {
+// Routes for Karyawan role
+Route::middleware(['auth', 'verified', 'role:Karyawan'])->group(function () {
     Route::get('/beranda', function () {
         return view('web.beranda');
     })->name('beranda');
+
     Route::resource('menu', MenuController::class);
     Route::post('/pilih-restoran', [MenuController::class, 'pilihRestoran'])->name('pilih.restoran');
     Route::post('/pilih-makanan', [MenuController::class, 'pilihMakanan'])->name('pilih.makanan');
 });
 
-
+// Authentication routes
 require __DIR__ . '/auth.php';

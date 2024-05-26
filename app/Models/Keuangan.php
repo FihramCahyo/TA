@@ -16,11 +16,6 @@ class Keuangan extends Model
         'user_id',
     ];
 
-    public function makananUser()
-    {
-        return $this->belongsTo(MakananUser::class);
-    }
-
     public function makanan()
     {
         return $this->belongsTo(Makanan::class);
@@ -34,5 +29,10 @@ class Keuangan extends Model
     public function laporan()
     {
         return $this->hasOne(Laporan::class);
+    }
+
+    public static function getTypes()
+    {
+        return ['pengeluaran', 'pemasukan']; // Gantilah ini dengan nilai enum sebenarnya
     }
 }

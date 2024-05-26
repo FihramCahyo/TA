@@ -8,4 +8,4 @@ window.Alpine = Alpine;
 
 Alpine.start();
 
-require("./chart.js");
+// require("./chart.js");

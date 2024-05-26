@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\MakananUser;
 use Illuminate\Http\Request;
 
+
 class KeuanganController extends Controller
 {
     public function index()
@@ -18,13 +19,14 @@ class KeuanganController extends Controller
     public function create()
     {
         $users = User::pluck('name', 'id');
-        $makanans = MakananUser::pluck('user_id', 'id');
-        return view('keuangan.create', compact('users', 'makanans'));
+        $makanans = MakananUser::with('user', 'makanan')->get();
+        $jenis = Keuangan::getTypes();
+        return view('keuangan.create', compact('users', 'makanans', 'jenis'));
     }
 
     public function getMakananbyKeuangan($id)
     {
-        $makanans = MakananUser::where('user_id', $id)->get();
+        $makanans = MakananUser::where('user_id', $id)->with('makanan')->get();
         return response()->json($makanans);
     }
 
@@ -34,15 +36,25 @@ class KeuanganController extends Controller
             'date' => 'required|date',
             'description' => 'nullable|string',
             'amount' => 'required|numeric',
-            'type' => 'required|string',
+            'type' => 'required|string|in:' . implode(',', Keuangan::getTypes()),
             'user_id' => 'required|exists:users,id',
             'makanan_id' => 'required|exists:makanans,id',
         ]);
 
-        Keuangan::create($request->all());
+
+        // Buat instance baru dari model Keuangan dan isi dengan data dari request
+        Keuangan::create([
+            'date' => $request->input('date'),
+            'description' => $request->input('description'),
+            'amount' => $request->input('amount'),
+            'type' => $request->input('type'),
+            'user_id' => $request->input('user_id'),
+            'makanan_id' => $request->input('makanan_id'),
+        ]);
 
         return redirect()->route('keuangan.index')->with('success', 'Data keuangan berhasil ditambahkan.');
     }
+
 
     public function edit(Keuangan $keuangan)
     {
@@ -57,7 +69,7 @@ class KeuanganController extends Controller
             'date' => 'required|date',
             'description' => 'nullable|string',
             'amount' => 'required|numeric',
-            'type' => 'required|string',
+            'type' => 'required|string|in:' . implode(',', Keuangan::getTypes()),
             'user_id' => 'required|exists:users,id',
             'makanan_id' => 'required|exists:makanans,id',
         ]);
