@@ -4,11 +4,13 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChartController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KeuanganController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\MakananController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VotingController;
+use App\Models\Laporan;
 
 // Guest routes
 Route::get('/', function () {
@@ -38,11 +40,15 @@ Route::middleware(['auth', 'verified', 'role:SDM'])->group(function () {
 
     Route::get('keuangan/get-makanan-by-keuangan/{id}', [KeuanganController::class, 'getMakananbyKeuangan']);
 
+    Route::get('/laporan', [LaporanController::class, 'laporan'])->name('laporan.index');
+    Route::post('/laporan/cetak', [LaporanController::class, 'cetakLaporan'])->name('laporan.cetak');
+
     Route::resource('keuangan', KeuanganController::class);
     Route::resource('dashboard', DashboardController::class);
     Route::resource('voting', VotingController::class);
     Route::resource('makanan', MakananController::class);
     Route::resource('user', UserController::class);
+    Route::resource('laporan', LaporanController::class);
 });
 
 // Routes for Karyawan role

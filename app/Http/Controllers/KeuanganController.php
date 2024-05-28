@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Keuangan;
+use App\Models\Makanan;
 use App\Models\User;
 use App\Models\MakananUser;
 use Illuminate\Http\Request;
@@ -34,19 +35,14 @@ class KeuanganController extends Controller
     {
         $request->validate([
             'date' => 'required|date',
-            'description' => 'nullable|string',
-            'amount' => 'required|numeric',
             'type' => 'required|string|in:' . implode(',', Keuangan::getTypes()),
             'user_id' => 'required|exists:users,id',
             'makanan_id' => 'required|exists:makanans,id',
         ]);
 
-
         // Buat instance baru dari model Keuangan dan isi dengan data dari request
         Keuangan::create([
             'date' => $request->input('date'),
-            'description' => $request->input('description'),
-            'amount' => $request->input('amount'),
             'type' => $request->input('type'),
             'user_id' => $request->input('user_id'),
             'makanan_id' => $request->input('makanan_id'),
@@ -58,23 +54,27 @@ class KeuanganController extends Controller
 
     public function edit(Keuangan $keuangan)
     {
-        $users = User::pluck('name', 'id');
-        $makanans = MakananUser::pluck('name', 'id');
-        return view('keuangan.edit', compact('keuangan', 'users', 'makanans'));
+        $makanans = Makanan::all(); // Ambil semua makanan dari tabel makanans
+        $jenis = Keuangan::getTypes();
+        return view('keuangan.edit', compact('keuangan', 'makanans', 'jenis'));
     }
+
 
     public function update(Request $request, Keuangan $keuangan)
     {
         $request->validate([
             'date' => 'required|date',
-            'description' => 'nullable|string',
-            'amount' => 'required|numeric',
             'type' => 'required|string|in:' . implode(',', Keuangan::getTypes()),
-            'user_id' => 'required|exists:users,id',
+            // 'user_id' => 'required|exists:users,id', // Tidak perlu karena user_id tidak diubah
             'makanan_id' => 'required|exists:makanans,id',
         ]);
 
-        $keuangan->update($request->all());
+        // Perbarui hanya field yang diperlukan
+        $keuangan->update([
+            'date' => $request->input('date'),
+            'type' => $request->input('type'),
+            'makanan_id' => $request->input('makanan_id'),
+        ]);
 
         return redirect()->route('keuangan.index')->with('success', 'Data keuangan berhasil diperbarui.');
     }

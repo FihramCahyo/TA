@@ -22,6 +22,7 @@
                             @endforeach
                         </select>
                     </div>
+                    <input type="hidden" name="makanan_id" id="makanan_id">
                     <div class="mb-4">
                         <label for="makanan_name" class="block text-sm font-medium text-gray-700">Makanan</label>
                         <input type="text" name="makanan_name" id="makanan_name" readonly
@@ -44,13 +45,6 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="mb-4">
-                        <label for="description" class="block text-sm font-medium text-gray-700">Deskripsi</label>
-                        <textarea name="description" id="description"
-                            class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                            placeholder="Deskripsi"></textarea>
-                    </div>
-
                     <div class="flex">
                         <x-primary-button class="h-[40px] w-[100px] text-center mr-8">
                             SIMPAN
