@@ -1,14 +1,13 @@
 <nav class="bg-white border-gray-200 dark:bg-gray-900">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-        <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
+        <a href="{{ route('beranda') }}" class="flex items-center space-x-3 rtl:space-x-reverse">
             <x-application-logo />
             <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">MIP Lunch Menu</span>
         </a>
         <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
             <button type="button"
                 class="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-                id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
-                data-dropdown-placement="bottom">
+                id="user-menu-button" aria-expanded="false" data-dropdown-placement="bottom">
                 <span class="sr-only">Open user menu</span>
             </button>
             <!-- Dropdown menu -->
@@ -29,9 +28,18 @@
                 </x-slot>
 
                 <x-slot name="content">
-                    <x-dropdown-link :href="route('profile.edit')">
+                    @auth
+                        @if (Auth::user()->hasRole('SDM'))
+                            <x-dropdown-link :href="url('dashboard')">
+                                {{ __('Dashboard') }}
+                            </x-dropdown-link>
+                        @endif
+                    @endauth
+
+
+                    {{-- <x-dropdown-link :href="route('profile.edit')">
                         {{ __('Profile') }}
-                    </x-dropdown-link>
+                    </x-dropdown-link> --}}
 
                     <!-- Authentication -->
                     <form method="POST" action="{{ route('logout') }}">

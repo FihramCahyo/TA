@@ -24,8 +24,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Routes for SDM role
-Route::middleware(['auth', 'verified', 'role:SDM'])->group(function () {
+
+// Routes for SDM role and Penyedia Makan
+Route::middleware(['auth', 'verified', 'role:SDM|Penyedia Makan'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
     Route::get('/voting-detail', [VotingController::class, 'detail'])->name('voting.detail');
@@ -37,7 +38,6 @@ Route::middleware(['auth', 'verified', 'role:SDM'])->group(function () {
     Route::get('/bar-chart', 'ChartController@barChart');
 
     Route::get('/get-menu/{restaurantName}', [MakananController::class, 'getMenuByRestaurant'])->name('menu.get-menu');
-
     Route::get('keuangan/get-makanan-by-keuangan/{id}', [KeuanganController::class, 'getMakananbyKeuangan']);
 
     Route::get('/laporan', [LaporanController::class, 'laporan'])->name('laporan.index');
@@ -52,7 +52,7 @@ Route::middleware(['auth', 'verified', 'role:SDM'])->group(function () {
 });
 
 // Routes for Karyawan role
-Route::middleware(['auth', 'verified', 'role:Karyawan'])->group(function () {
+Route::middleware(['auth', 'verified', 'role:Karyawan|SDM'])->group(function () {
     Route::get('/beranda', function () {
         return view('web.beranda');
     })->name('beranda');

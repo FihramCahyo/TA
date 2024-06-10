@@ -18,7 +18,7 @@
                     <a href="{{ url('dashboard') }}" class="flex items-center space-x-3 rtl:space-x-reverse">
                         <x-application-logo />
                         <span
-                            class="self-center text-[#F4B04F] text-xl font-semibold whitespace-nowrap dark:text-white">CMS
+                            class="self-center text-[#F 4B04F] text-xl font-semibold whitespace-nowrap dark:text-white">CMS
                             Admin</span>
                     </a>
                 </div>
@@ -43,12 +43,16 @@
                         </x-slot>
 
                         <x-slot name="content">
-                            <x-dropdown-link :href="route('profile.edit')">
-                                {{ __('Profile') }}
+                            <x-dropdown-link :href="route('beranda')">
+                                {{ __('Beranda') }}
                             </x-dropdown-link>
 
+                            {{-- <x-dropdown-link :href="route('profile.edit')">
+                                {{ __('Profile') }}
+                            </x-dropdown-link> --}}
+
                             <!-- Authentication -->
-                            <form method="POST" action="{{ route('logout') }}">
+                            {{-- <form method="POST" action="{{ route('logout') }}">
                                 @csrf
 
                                 <x-dropdown-link :href="route('logout')"
@@ -56,7 +60,7 @@
                                                         this.closest('form').submit();">
                                     {{ __('Log Out') }}
                                 </x-dropdown-link>
-                            </form>
+                            </form> --}}
                         </x-slot>
                     </x-dropdown>
                 </div>

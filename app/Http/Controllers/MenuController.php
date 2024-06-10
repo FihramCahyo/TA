@@ -38,7 +38,7 @@ class MenuController extends Controller
         $request->validate([
             'id' => 'required|exists:votings,id',
         ]);
-        dd($request->id);
+
         $countUserAuthVote = $this->countUserAuthVote();
 
         if ($countUserAuthVote == 0) {
