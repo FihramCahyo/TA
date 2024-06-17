@@ -16,7 +16,6 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $datavoting = Voting::all();
         $datauser = User::all();
         $dataCountVote = VotingUser::all();
         $dataCountMakanan = MakananUser::all();
@@ -24,13 +23,13 @@ class DashboardController extends Controller
         $userCount = $datauser->count();
         $voteCount = $dataCountVote->count();
         $makananCount = $dataCountMakanan->count();
+        $totalPengeluaran = (new KeuanganController)->getTotalPengeluaran();
 
         return view('Dashboard', [
             'userCount' => $userCount,
             'voteCount' => $voteCount,
             'makananCount' => $makananCount,
-            'voting' => $datavoting,
-            'makanan' => $makananCount
+            'totalPengeluaran' => $totalPengeluaran,
         ]);
     }
 

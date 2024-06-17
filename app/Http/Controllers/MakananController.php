@@ -13,17 +13,17 @@ class MakananController extends Controller
      */
     public function index()
     {
-        $datamakanan = Makanan::all();
+        $datamakanan = Makanan::all(); // Hanya menyertakan data yang belum dihapus
+        $trashedMakanan = Makanan::onlyTrashed()->get(); // Hanya menyertakan data yang sudah dihapus
 
         return view('makanan.index', [
-            'datamakanan' => $datamakanan
+            'datamakanan' => $datamakanan,
+            'trashedMakanan' => $trashedMakanan
         ]);
     }
 
     public function detail()
     {
-        $makananId = 1;
-
         $data = MakananUser::with('makanan')->get();
         $makananIdArray = [];
 
@@ -31,14 +31,14 @@ class MakananController extends Controller
 
         foreach ($makananIds as $key => $makananId) {
             $makananIdUser = $data->where('makanan_id', $makananId)->first();
-            $makananId = [
+            $makanan = [
                 'img' => $makananIdUser->makanan->image_path,
                 'nama' => $makananIdUser->makanan->name,
                 'harga' => $makananIdUser->makanan->price,
                 'jmlh' => $data->where('makanan_id', $makananId)->count(),
                 'id' => $makananId
             ];
-            $makananIdArray[$key] = $makananId;
+            $makananIdArray[$key] = $makanan;
         }
 
         return view('makanan.detail', [
@@ -69,14 +69,14 @@ class MakananController extends Controller
         // Validasi data makanan
         $request->validate([
             'name' => 'required|string|max:255',
-            'image_path' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image_path' => 'required|image|mimes:jpeg,png,jpg,gif|max:4096',
             'description' => 'required|string',
             'price' => 'required|integer',
         ]);
 
         // Upload gambar makanan
         $imageName = time() . '.' . $request->image_path->extension();
-        $request->image_path->move(public_path('images'), $imageName);
+        $request->image_path->move(public_path('images_makanan'), $imageName);
 
         // Simpan data makanan ke dalam database
         Makanan::create([
@@ -89,7 +89,6 @@ class MakananController extends Controller
         // Redirect ke halaman indeks makanan dengan pesan sukses
         return redirect()->route('makanan.index')->with('success', 'Makanan berhasil ditambahkan.');
     }
-
 
 
     /**
@@ -114,10 +113,10 @@ class MakananController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        // Validasi data yang diterima dari form
+        // Validasi data makanan
         $request->validate([
             'name' => 'required|string|max:255',
-            'image_path' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image_path' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:4096',
             'description' => 'required|string',
             'price' => 'required|integer',
         ]);
@@ -126,15 +125,23 @@ class MakananController extends Controller
 
         // Mengupdate gambar makanan jika ada yang diunggah
         if ($request->hasFile('image_path')) {
-            $imagePath = $request->file('image_path')->store('makanan_images', 'public');
-            $makanan->image_path = $imagePath;
+            // Hapus gambar lama jika ada
+            if ($makanan->image_path && file_exists(public_path('images_makanan/' . $makanan->image_path))) {
+                unlink(public_path('images_makanan/' . $makanan->image_path));
+            }
+
+            // Simpan gambar baru
+            $imageName = time() . '.' . $request->image_path->extension();
+            $request->image_path->move(public_path('images_makanan'), $imageName);
+            $makanan->image_path = $imageName;
         }
 
         // Memperbarui data makanan
-        $makanan->name = $request->name;
-        $makanan->description = $request->description;
-        $makanan->price = $request->price;
-        $makanan->save();
+        $makanan->update([
+            'name' => $request->name,
+            'description' => $request->description,
+            'price' => $request->price,
+        ]);
 
         // Redirect ke halaman indeks makanan dengan pesan sukses
         return redirect()->route('makanan.index')->with('success', 'Makanan berhasil diperbarui.');
@@ -146,7 +153,35 @@ class MakananController extends Controller
     public function destroy(string $id)
     {
         $datamakanan = Makanan::findOrFail($id);
-        $datamakanan->delete();
+        $datamakanan->delete(); //soft delete
+
+        // Hapus gambar jika ada
+        if ($datamakanan->image_path && file_exists(public_path('images_makanan/' . $datamakanan->image_path))) {
+            unlink(public_path('images_makanan/' . $datamakanan->image_path));
+        }
+
         return redirect()->route('makanan.index')->with('success', 'Data makanan berhasil dihapus');
+    }
+
+    public function restore($id)
+    {
+        $datamakanan = Makanan::withTrashed()->findOrFail($id);
+        $datamakanan->restore();
+
+        return redirect()->route('makanan.index')->with('success', 'Data makanan berhasil dipulihkan.');
+    }
+
+    public function forceDelete($id)
+    {
+        $datamakanan = Makanan::withTrashed()->findOrFail($id);
+
+        // Hapus gambar fisik jika ada
+        if ($datamakanan->image_path && file_exists(public_path('images_makanan/' . $datamakanan->image_path))) {
+            unlink(public_path('images_makanan/' . $datamakanan->image_path));
+        }
+
+        $datamakanan->forceDelete();
+
+        return back();
     }
 }

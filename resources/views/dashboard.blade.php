@@ -67,17 +67,16 @@
                                     d="M12.293 3.293a1 1 0 0 1 1.414 0L16.414 6h-2.828l-1.293-1.293a1 1 0 0 1 0-1.414ZM12.414 6 9.707 3.293a1 1 0 0 0-1.414 0L5.586 6h6.828ZM4.586 7l-.056.055A2 2 0 0 0 3 9v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2h-4a5 5 0 0 1 0-10h4a2 2 0 0 0-1.53-1.945L17.414 7H4.586Z"
                                     clip-rule="evenodd" />
                             </svg>
-
-
-
                         </div>
                         <div class="text-end pt-1 ">
                             <h2 class="text-xl mb-0 text-capitalize">Pengeluaran</h2>
-                            <h4 class="mt-1 text-lg font-bold">5</h4>
+                            <h4 class="mt-1 text-lg font-bold">
+                                {{ 'Rp ' . number_format($totalPengeluaran, 0, ',', '.') }}</h4>
                         </div>
                         <hr class="dark horizontal mt-2">
                         <div class="card-footer p-3">
-                            <p class="mb-0"><span class="text-success text-sm font-weight-bolder">View Details</p>
+                            <a href="{{ route('keuangan.detail') }}" class="text-black hover:text-blue-700">View
+                                Details</a>
                         </div>
                     </div>
                 </div>

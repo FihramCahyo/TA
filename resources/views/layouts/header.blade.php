@@ -29,7 +29,7 @@
 
                 <x-slot name="content">
                     @auth
-                        @if (Auth::user()->hasRole('SDM'))
+                        @if (Auth::user()->hasAnyRole(['SDM', 'Penyedia Makan']))
                             <x-dropdown-link :href="url('dashboard')">
                                 {{ __('Dashboard') }}
                             </x-dropdown-link>

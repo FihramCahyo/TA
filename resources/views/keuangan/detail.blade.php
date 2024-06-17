@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="p-4 sm:ml-64">
         <div class="p-4 border-gray-200 rounded-lg dark:border-gray-700 mt-14">
-            <h1 class="text-4xl">Details of Makanan</h1>
+            <h1 class="text-4xl">Detail Keuangan</h1>
 
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg mt-4">
                 {{-- Table --}}
@@ -10,52 +10,51 @@
                         <thead class="text-xs text-black uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
                                 <th scope="col" class="px-6 py-3">
-                                    Food Name
+                                    Nama Karyawan
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Price
+                                    Nama Makanan
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Jumlah Pemesan
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Action
+                                    Harga
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($data as $makanan)
+                            @foreach ($keuangans as $keuangan)
                                 <tr class="bg-white text-black border-b dark:bg-gray-800 dark:border-gray-700">
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            <img src="{{ asset('images_makanan/' . $makanan['img']) }}"
-                                                alt="Restaurant Image" class="w-16 h-16 object-cover rounded-full mr-2">
-                                            {{ $makanan['nama'] }}
-                                        </div>
+                                        {{ $keuangan->user->name }}
                                     </td>
 
                                     <td class="px-6 py-4">
-                                        Rp {{ $makanan['harga'] }}
+                                        {{ $keuangan->makanan->name }}
                                     </td>
 
                                     <td class="px-6 py-4">
-                                        {{ $makanan['jmlh'] }}
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <a href="{{ route('makanan.user-detail', $makanan['id']) }}"
-                                            class="text-blue-600 hover:text-blue-900">More</a>
+                                        Rp {{ number_format($keuangan->makanan->price, 0, ',', '.') }}
                                     </td>
                                 </tr>
                             @endforeach
+                            <tr class="bg-orange-500 text-white font-bold">
+                                <td colspan="2" class="px-6 py-4 whitespace-nowrap">
+                                    Total Pengeluaran
+                                </td>
+                                <td class="px-6 py-4">
+                                    Rp {{ number_format($keuangans->sum('makanan.price'), 0, ',', '.') }}
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
+                {{-- <div class="mt-4">
+                    <h2 class="text-2xl">Total Pengeluaran: Rp {{ number_format($totalPengeluaran, 0, ',', '.') }}</h2>
+                </div> --}}
                 <div class="flex justify-start mt-4">
-                    <button type="button"
-                        class="text-blue-500 hover:text-blue-700 border-blue-500 hover:border-blue-700 rounded-xl px-4 py-2"
-                        onclick="window.history.back()">
+                    <a href="{{ route('dashboard.index') }}"
+                        class="text-blue-600 hover:text-blue-900 border-blue-600 hover:border-blue-900 rounded-xl px-4 py-2">
                         Kembali
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>

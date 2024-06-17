@@ -9,7 +9,6 @@
                     Tambah Data
                 </x-primary-button>
 
-
                 {{-- Table --}}
                 <div class="relative overflow-x-auto mt-4">
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -39,22 +38,24 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($keuangans as $keuangan)
+                            @foreach ($keuangans as $key => $keuangan)
                                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                     <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        {{ $loop->iteration }}
+                                        {{ $key + 1 }}
                                     </td>
                                     <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {{ \Carbon\Carbon::parse($keuangan->date)->format('d-m-Y') }}
                                     </td>
                                     <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        {{ $keuangan->user->name }}
+                                        {{ $keuangan->user ? $keuangan->user->name : '' }}
                                     </td>
                                     <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        {{ $keuangan->makanan->name }}
+                                        {{ $keuangan->makanan ? $keuangan->makanan->name : '' }}
                                     </td>
                                     <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        {{ 'Rp ' . number_format($keuangan->makanan->price, 0, ',', '.') }}
+                                        @if ($keuangan->makanan)
+                                            {{ 'Rp ' . number_format($keuangan->makanan->price, 0, ',', '.') }}
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {{ $keuangan->type }}
@@ -62,12 +63,13 @@
                                     <td class="px-6 py-4">
                                         <a href="{{ route('keuangan.edit', $keuangan->id) }}"
                                             class="text-blue-600 hover:text-blue-900">Edit</a>
-                                        <form action="{{ route('keuangan.destroy', $keuangan->id) }}" method="POST"
+                                        <form action="{{ route('keuangan.update', $keuangan->id) }}" method="POST"
                                             class="inline">
                                             @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                class="text-red-600 hover:text-red-900 ml-2">Delete</button>
+                                            @method('PATCH')
+                                            <button type="submit" onclick="confirmDelete()"
+                                                data-pesan={{ $key + 1 }}
+                                                class="text-red-600 btn-delete hover:text-red-900 ml-2">Delete</button>
                                         </form>
                                     </td>
                                 </tr>
@@ -78,4 +80,14 @@
             </div>
         </div>
     </div>
+
+
+    {{-- Include SweetAlert component --}}
+    @include('components.sweetalert')
+
+    @if (session('success'))
+        <script>
+            showSuccessAlert('{{ session('success') }}');
+        </script>
+    @endif
 </x-app-layout>

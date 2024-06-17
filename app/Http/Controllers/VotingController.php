@@ -46,13 +46,13 @@ class VotingController extends Controller
         ]);
     }
 
-
     public function userdetail($id)
     {
         $datavoting = VotingUser::with('user')->where('voting_id', $id)->get();
 
         return view('voting.user-detail', ['datavoting' => $datavoting]);
     }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -72,7 +72,8 @@ class VotingController extends Controller
         ]);
 
         $imageName = time() . '.' . $request->image_path->extension();
-        $request->image_path->move(public_path('images'), $imageName);
+        $imagePath = public_path('images_voting');
+        $request->image_path->move($imagePath, $imageName);
 
         Voting::create([
             'restaurant_name' => $request->restaurant_name,
@@ -87,6 +88,7 @@ class VotingController extends Controller
      */
     public function show(string $id)
     {
+        // Method ini tidak digunakan dalam kode yang diberikan
     }
 
     /**
@@ -111,8 +113,14 @@ class VotingController extends Controller
         $datavoting = Voting::findOrFail($id);
 
         if ($request->hasFile('image_path')) {
+            // Hapus gambar lama jika ada
+            if ($datavoting->image_path && file_exists(public_path('images_voting/' . $datavoting->image_path))) {
+                unlink(public_path('images_voting/' . $datavoting->image_path));
+            }
+
+            // Simpan gambar baru
             $imageName = time() . '.' . $request->image_path->extension();
-            $request->image_path->move(public_path('images'), $imageName);
+            $request->image_path->move(public_path('images_voting'), $imageName);
             $datavoting->image_path = $imageName;
         }
 
@@ -128,11 +136,13 @@ class VotingController extends Controller
     public function destroy(string $id)
     {
         $datavoting = Voting::findOrFail($id);
-        $datavoting->delete();
-        return redirect()->route('voting.index')->with('success', 'Data Voting berhasil dihapus');
-    }
 
-    /**
-     * Display the menu.
-     */
+        // Hapus gambar jika ada
+        if ($datavoting->image_path && file_exists(public_path('images_voting/' . $datavoting->image_path))) {
+            unlink(public_path('images_voting/' . $datavoting->image_path));
+        }
+
+        $datavoting->delete();
+        return back();
+    }
 }

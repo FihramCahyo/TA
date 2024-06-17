@@ -11,34 +11,36 @@
                     @method('PUT')
                     <div class="mb-4">
                         <label for="name" class="block text-sm font-medium text-gray-700">Nama Makanan</label>
-                        <input type="text" name="name" id="name"
-                            class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                            value="{{ $datamakanan->name }}" required>
+                        <input type="text" name="name" id="name" value="{{ $datamakanan->name }}"
+                            class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                     </div>
                     <div class="mb-4">
                         <label for="price" class="block text-sm font-medium text-gray-700">Harga</label>
-                        <input type="number" name="price" id="price"
-                            class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                            value="{{ $datamakanan->price }}" required>
+                        <input type="number" name="price" id="price" value="{{ $datamakanan->price }}"
+                            class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                     </div>
                     <div class="mb-4">
                         <label for="description" class="block text-sm font-medium text-gray-700">Deskripsi</label>
                         <textarea name="description" id="description" rows="3"
-                            class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                            required>{{ $datamakanan->description }}</textarea>
+                            class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">{{ $datamakanan->description }}</textarea>
                     </div>
                     <div class="mb-4">
                         <label for="image_path" class="block text-sm font-medium text-gray-700">Gambar Makanan</label>
+                        <img src="{{ asset('images_makanan/' . $datamakanan->image_path) }}"
+                            class="w-24 h-24 mr-4 inline-block"> {{ $datamakanan->image_path }}
                         <input type="file" name="image_path" id="image_path" accept="image/*"
                             class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        <p class="mt-2 text-sm text-gray-500">Kosongkan jika tidak ingin mengubah gambar.</p>
                     </div>
-
                     <div class="flex">
-                        <button type="submit"
-                            class="h-[40px] w-[100px] text-center mr-8 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md">Simpan</button>
-                        <a href="{{ route('makanan.index') }}"
-                            class="h-[40px] w-[100px] text-center bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md">Batal</a>
+                        <x-primary-button class="h-[40px] w-[100px] text-center mr-8">
+                            SIMPAN
+                        </x-primary-button>
+
+                        <a href="{{ route('makanan.index') }}">
+                            <x-danger-button class="h-[40px] w-[100px] text-center">
+                                BATAL
+                            </x-danger-button>
+                        </a>
                     </div>
                 </form>
             </div>

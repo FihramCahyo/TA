@@ -31,12 +31,19 @@
                                         {{ $makanan->makanan->name }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ $makanan->created_at->format('d F Y H:i:s') }}
+                                        {{ $makanan->created_at->format('d F Y') }}
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
+                </div>
+                <div class="flex justify-start mt-4">
+                    <button type="button"
+                        class="text-blue-500 hover:text-blue-700 border-blue-500 hover:border-blue-700 rounded-xl px-4 py-2"
+                        onclick="window.history.back()">
+                        Kembali
+                    </button>
                 </div>
             </div>
         </div>

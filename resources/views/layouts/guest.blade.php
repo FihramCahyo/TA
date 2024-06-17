@@ -27,8 +27,7 @@
             <div class="bg-white w-[500px] h-[1200px] absolute -left-10 rotate-12 rounded-3xl">
             </div>
             <div class="z-10 mr-40  w-80 h-72">
-                <img src="https://media.licdn.com/dms/image/D560BAQHPvIvitg9hww/company-logo_400_400/0/1705039557541?e=2147483647&v=beta&t=g6WzZG0A9h41BDiT_t79vAP80HtwrqDSO11SS0BbGQA"
-                    alt="" srcset="" class="w-40 m-auto">
+                <img src="{{ asset('images/logo-mardawa.png') }}" alt="" srcset="" class="w-40 m-auto">
                 <h1 class="text-center text-2xl font-bold text-[#008ED6]">Mardawa Intiguna Persada</h1>
                 <h2 class="text-center text-2xl font-bold text-[#F7AE45]">Lunch Menu</h2>
             </div>

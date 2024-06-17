@@ -11,19 +11,19 @@
                         <label for="name" class="block text-sm font-medium text-gray-700">Nama Makanan</label>
                         <input type="text" name="name" id="name"
                             class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                            placeholder="Masukkan Nama Makanan" required>
+                            placeholder="Masukkan Nama Makanan" value="{{ old('name') }}" required>
                     </div>
                     <div class="mb-4">
                         <label for="price" class="block text-sm font-medium text-gray-700">Harga</label>
                         <input type="number" name="price" id="price"
                             class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                            placeholder="Masukkan Harga Makanan" required>
+                            placeholder="Masukkan Harga Makanan" value="{{ old('price') }}" required>
                     </div>
                     <div class="mb-4">
                         <label for="description" class="block text-sm font-medium text-gray-700">Deskripsi</label>
                         <textarea name="description" id="description" rows="3"
                             class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                            placeholder="Masukkan Deskripsi Makanan" required></textarea>
+                            placeholder="Masukkan Deskripsi Makanan" required>{{ old('description') }}</textarea>
                     </div>
                     <div class="mb-4">
                         <label for="image_path" class="block text-sm font-medium text-gray-700">Gambar Makanan</label>
@@ -32,11 +32,29 @@
                     </div>
 
                     <div class="flex">
-                        <button type="submit"
-                            class="h-[40px] w-[100px] text-center mr-8 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md">SIMPAN</button>
-                        <a href="{{ route('makanan.index') }}"
-                            class="h-[40px] w-[100px] text-center bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md">BATAL</a>
+                        <x-primary-button class="h-[40px] w-[100px] text-center mr-8">
+                            SIMPAN
+                        </x-primary-button>
+
+                        <a href="{{ route('makanan.index') }}">
+                            <x-danger-button class="h-[40px] w-[100px] text-center">
+                                BATAL
+                            </x-danger-button>
+                        </a>
                     </div>
+
+                    @if ($errors->any())
+                        <div class="mb-4">
+                            <div class="font-medium text-red-600">Whoops! There were some problems with your input.
+                            </div>
+                            <ul class="mt-2 list-disc list-inside text-sm text-red-600">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
                 </form>
             </div>
         </div>

@@ -47,7 +47,8 @@
                                     class="flex flex-col items-center justify-center w-2/3 p-4 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
                                     <div class="flex items-center justify-center">
                                         <img class="rounded-t-lg mx-auto h-10 lg:h-24"
-                                            src="{{ asset('images/' . $item->image_path) }}" alt="Logo Restoran" />
+                                            src="{{ asset('images_voting/' . $item->image_path) }}"
+                                            alt="Logo Restoran" />
                                     </div>
                                     <div class="w-full text-center">{{ $item->restaurant_name }}</div>
                                 </label>
@@ -84,9 +85,10 @@
                                 items-center bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100
                                     dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
 
-                            <div class="w-1/2 bg-slate-500 h-full">
-                                <img class="object-cover h-full rounded-t-lg"src="{{ asset('images/' . $item->image_path) }}"
-                                    alt="product image" />
+                            <div class="w-1/2 bg-slate-500 h-full relative">
+                                <img class="object-cover h-full rounded-t-lg w-full absolute inset-0"
+                                    src="{{ asset('images_makanan/' . $item->image_path) }}"
+                                    alt="{{ $item->restaurant_name }}" />
                             </div>
 
                             <div class="p-4 w-1/2 text-left">
@@ -111,7 +113,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Determine the countdown target time
             var today = new Date();
-            var countDownDate = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 15, 0, 0)
+            var countDownDate = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 10, 0, 0)
                 .getTime();
 
             // Update the countdown every 1 second
@@ -125,14 +127,21 @@
                 var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
                 // Display the result
-                if (distance > 0) {
-                    document.getElementById("hours").innerHTML = hours;
-                    document.getElementById("minutes").innerHTML = minutes;
-                    document.getElementById("seconds").innerHTML = seconds;
+                var hoursElement = document.getElementById("hours");
+                var minutesElement = document.getElementById("minutes");
+                var secondsElement = document.getElementById("seconds");
+                if (distance > 0 && hoursElement && minutesElement && secondsElement) {
+                    hoursElement.innerHTML = hours;
+                    minutesElement.innerHTML = minutes;
+                    secondsElement.innerHTML = seconds;
                 } else {
                     clearInterval(countdownfunction);
-                    document.getElementById("countdown").innerHTML = "Silakan Pilih Menu Makanan Anda";
-                    document.getElementById("menu-section").style.display = "block";
+                    var countdownElement = document.getElementById("countdown");
+                    var menuSectionElement = document.getElementById("menu-section");
+                    if (countdownElement && menuSectionElement) {
+                        countdownElement.innerHTML = "Silakan Pilih Menu Makanan Anda";
+                        menuSectionElement.style.display = "block";
+                    }
                 }
             }, 1000);
         });

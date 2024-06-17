@@ -17,6 +17,17 @@ class KeuanganController extends Controller
         return view('keuangan.index', compact('keuangans'));
     }
 
+    public function detail()
+    {
+        $keuangans = MakananUser::with(['makanan', 'user'])->get();
+        $totalPengeluaran = $keuangans->sum(function ($keuangan) {
+            return $keuangan->makanan->price;
+        });
+
+        return view('keuangan.detail', compact('keuangans', 'totalPengeluaran'));
+    }
+
+
     public function create()
     {
         $users = User::pluck('name', 'id');
@@ -84,5 +95,15 @@ class KeuanganController extends Controller
         $keuangan->delete();
 
         return redirect()->route('keuangan.index')->with('success', 'Data keuangan berhasil dihapus.');
+    }
+
+    public function getTotalPengeluaran()
+    {
+        $totalPengeluaran = MakananUser::with('makanan')
+            ->get()
+            ->sum(function ($makananUser) {
+                return $makananUser->makanan->price;
+            });
+        return $totalPengeluaran;
     }
 }

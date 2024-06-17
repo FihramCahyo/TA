@@ -91,6 +91,14 @@
                             {{ 'Rp ' . number_format($item->makanan->price, 0, ',', '.') }}</td>
                     </tr>
                 @endforeach
+                <tr>
+                    <td colspan="5" class="text-lg font-semibold border border-gray-300 px-4 py-2 print:text-lg">
+                        Total Harga
+                    </td>
+                    <td class="text-lg font-semibold border border-gray-300 px-4 py-2 print:text-lg">
+                        {{ 'Rp ' . number_format($data->sum('makanan.price'), 0, ',', '.') }}
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>

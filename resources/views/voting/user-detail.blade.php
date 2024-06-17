@@ -16,13 +16,14 @@
                                 <th scope="col" class="px-6 py-3">
                                     Tanggal
                                 </th>
-                                <th scope="col" class="px-6 py-3">
+                                {{-- <th scope="col" class="px-6 py-3">
                                     Action
-                                </th>
+                                </th> --}}
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($datavoting as $voting)
+                                @csrf
                                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                     <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {{ $voting->user->name }}
@@ -30,16 +31,21 @@
                                     <td class="px-6 py-4">
                                         {{ $voting->created_at }}
                                     </td>
-                                    <td class="px-6 py-4">
-                                        <a href="{{ route('voting.edit', $voting->id) }}"
-                                            class="text-blue-600 hover:text-blue-900">More</a>
-
-                                        @csrf
-                                    </td>
+                                    {{-- <td class="px-6 py-4">
+                                        <a href="#" class="text-blue-600 hover:text-blue-900">More</a>
+                                    </td> --}}
                                 </tr>
                             @endforeach
                         </tbody>
+
                     </table>
+                </div>
+                <div class="flex justify-start mt-4">
+                    <button type="button"
+                        class="text-blue-500 hover:text-blue-700 border-blue-500 hover:border-blue-700 rounded-xl px-4 py-2"
+                        onclick="window.history.back()">
+                        Kembali
+                    </button>
                 </div>
             </div>
         </div>

@@ -28,16 +28,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
 // Routes for SDM role and Penyedia Makan
 Route::middleware(['auth', 'verified', 'role:SDM|Penyedia Makan'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
-
     Route::get('/voting-detail', [VotingController::class, 'detail'])->name('voting.detail');
     Route::get('/voting-user-detail/{id}', [VotingController::class, 'userdetail'])->name('voting.user-detail');
-
     Route::get('/makanan-detail', [MakananController::class, 'detail'])->name('makanan.detail');
     Route::get('/makanan-user-detail/{id}', [MakananController::class, 'userdetail'])->name('makanan.user-detail');
+    Route::patch('/makanan/{id}/restore', [MakananController::class, 'restore'])->name('makanan.restore');
+    Route::delete('/makanan/{id}/forceDelete', [MakananController::class, 'forceDelete'])->name('makanan.forceDelete');
+
 
     Route::get('/bar-chart', 'ChartController@barChart');
 
     Route::get('/get-menu/{restaurantName}', [MakananController::class, 'getMenuByRestaurant'])->name('menu.get-menu');
+
+    Route::get('/keuangan/detail', [KeuanganController::class, 'detail'])->name('keuangan.detail');
     Route::get('keuangan/get-makanan-by-keuangan/{id}', [KeuanganController::class, 'getMakananbyKeuangan']);
 
     Route::get('/laporan', [LaporanController::class, 'laporan'])->name('laporan.index');
@@ -52,7 +55,7 @@ Route::middleware(['auth', 'verified', 'role:SDM|Penyedia Makan'])->group(functi
 });
 
 // Routes for Karyawan role
-Route::middleware(['auth', 'verified', 'role:Karyawan|SDM'])->group(function () {
+Route::middleware(['auth', 'verified', 'role:Karyawan|SDM|Penyedia Makan'])->group(function () {
     Route::get('/beranda', function () {
         return view('web.beranda');
     })->name('beranda');
